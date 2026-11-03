@@ -1,0 +1,127 @@
+# ЛПР 6 — ПОШАГОВАЯ ИНСТРУКЦИЯ (просто копируй команды)
+
+В архиве три папки:
+- `1-glavnyj-repozitorij` — файлы для ДИКТАТОРА (тот, кто создаёт главный репозиторий)
+- `2-uchastnik-forkaet`  — страница героя для УЧАСТНИКА №1 (kurmasheva-favorite-hero.html)
+- `3-podruga-vtoroj-uchastnik` — страница героя для УЧАСТНИКА №2 (podruga-favorite-hero.html)
+
+Вас двое: одна из вас — диктатор, другая — участник с форком.
+(Можно и обеим сделать по странице: диктатор тоже может добавить свою страницу.)
+
+Код писать не нужно. Везде, где в <угловых скобках>, подставь своё.
+
+---------------------------------------------------------------
+## ШАГ 0. Один раз настроить git (в терминале VS Code: Terminal → New Terminal)
+
+    git config --global user.name "Aiauluumn"
+    git config --global user.email "kurmasheva.ayaulym@mail.ru"
+
+(Эмейл должен совпадать с тем, что в GitHub-аккаунте, или используй тот, с которым регистрировалась на GitHub.)
+
+---------------------------------------------------------------
+## ШАГ 1. ДИКТАТОР: создаёт главный репозиторий
+
+1. На github.com → кнопка "New" → имя, например `comics-heroes` → Public → "Create repository"
+   (НЕ ставь галочки README / .gitignore — репозиторий должен быть пустым).
+2. Распакуй zip. Открой в VS Code папку `1-glavnyj-repozitorij` (File → Open Folder).
+3. Терминал в этой папке, по очереди:
+
+       git init
+       git add .
+       git commit -m "Загружена работа из ЛПР 4"
+       git branch -M main
+       git remote add origin https://github.com/<логин-диктатора>/comics-heroes.git
+       git push -u origin main
+
+   Если спросит логин/пароль — вместо пароля нужен Personal Access Token
+   (GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → галочка "repo").
+
+   ВАЖНО: в методичке написано `master`, но на GitHub ветка по умолчанию называется `main`.
+   Поэтому выше стоит `git branch -M main` и `git push -u origin main`.
+
+4. Отправь подруге ссылку на репозиторий.
+
+---------------------------------------------------------------
+## ШАГ 2. УЧАСТНИК: форк, клон, ветка, страница, Pull Request
+
+1. Открой ссылку на репозиторий диктатора → кнопка "Fork" → "Create fork".
+2. Клонируй СВОЙ форк (в папку, где хочешь работать):
+
+       git clone https://github.com/<твой-логин>/comics-heroes.git
+       cd comics-heroes
+
+3. Добавь главный репозиторий как второй remote:
+
+       git remote add upstream https://github.com/<логин-диктатора>/comics-heroes.git
+       git remote -v
+
+4. Создай ветку:
+
+       git checkout -b my-feature-branch
+
+5. Скопируй свою страницу героя в папку `comics-heroes`:
+   - у тебя: `kurmasheva-favorite-hero.html` (из папки 2)
+   - у подруги: `podruga-favorite-hero.html` (из папки 3) — переименуй её в `<фамилия>-favorite-hero.html`
+   Герой в странице уже написан — при желании поменяй текст в VS Code.
+
+6. (По методичке) Добавь ссылку на свою страницу в `index.html`, в раздел "Страницы героев",
+   вместо комментария добавь строку:
+
+       <li><a href="kurmasheva-favorite-hero.html">Человек-паук</a></li>
+
+   (подруга — `podruga-favorite-hero.html` и своё имя героя).
+   Если вы обе добавите строку в одно и то же место — получится КОНФЛИКТ. Это нужно для Шага 3!
+
+7. Индексирование и коммит:
+
+       git add .
+       git commit -m "Добавлена страница с описанием любимого героя комиксов"
+
+8. Отправка ветки в свой форк:
+
+       git push origin my-feature-branch
+
+9. На GitHub открой свой форк → жёлтая кнопка "Compare & pull request" →
+   описание: "Добавлена страница с описанием любимого героя комиксов" → "Create pull request".
+
+---------------------------------------------------------------
+## ШАГ 3. Если в Pull Request написано "This branch has conflicts"
+
+Выполни в папке своего клона:
+
+    git fetch upstream
+    git checkout main
+    git merge upstream/main
+    git checkout my-feature-branch
+    git merge main
+
+Если появились конфликты — открой файл (обычно `index.html`) в VS Code. Там будут метки:
+
+    <<<<<<< HEAD
+    твоя строка
+    =======
+    строка из главного репозитория
+    >>>>>>> main
+
+Нажми в VS Code "Accept Both Changes" (оставить обе строки) или удали метки вручную.
+Потом:
+
+    git add index.html
+    git commit -m "Разрешены конфликты"
+    git push origin my-feature-branch
+
+Pull Request обновится автоматически.
+
+---------------------------------------------------------------
+## ШАГ 4. ДИКТАТОР: принимает Pull Request
+
+1. Главный репозиторий на GitHub → вкладка "Pull requests" → открыть запрос.
+2. Проверить: нет конфликтов, файлы на месте (вкладка "Files changed").
+3. Кнопка "Merge pull request" → "Confirm merge".
+4. По желанию: "Delete branch".
+
+Готово — в главном репозитории теперь страницы героев обеих участниц.
+
+---------------------------------------------------------------
+## Что сдавать (обычно)
+Скриншоты: главный репозиторий, форк, Pull Request, слитый PR, список коммитов.
